@@ -1,6 +1,6 @@
 spring:
   application:
-    name: crud-security
+    name: spring-proficiency-demo
 
   profiles:
     active: local

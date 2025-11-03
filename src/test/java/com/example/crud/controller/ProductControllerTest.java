@@ -50,7 +50,7 @@ public class ProductControllerTest {
 
         when(productMapper.toEntity(any(ProductRequestDTO.class))).thenReturn(new ProductEntity());
         when(productMapper.toResponseDto(any(ProductEntity.class))).thenReturn(expectedResponse);
-        when(productService.create(any(ProductEntity.class))).thenReturn(new ProductEntity());
+        when(productService.create(any(ProductEntity.class))).thenReturn(expectedResponse);
 
         MvcResult result = mockMvc.perform(post("/products")
             .contentType(MediaType.APPLICATION_JSON)

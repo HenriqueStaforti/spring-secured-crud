@@ -1,5 +1,6 @@
 package com.example.crud.service;
 
+import com.example.crud.dto.ProductResponseDTO;
 import com.example.crud.dto.ProductUpdateRequestDTO;
 import com.example.crud.exception.ResourceNotFoundException;
 import com.example.crud.mapper.ProductMapper;
@@ -55,10 +56,10 @@ class ProductServiceTest {
         when(productRepository.save(any(ProductEntity.class))).thenReturn(sampleProduct);
 
         ProductEntity toSave = ProductEntity.builder().name("New").price(10.0).enabled(true).build();
-        ProductEntity result = productService.create(toSave);
+        ProductResponseDTO result = productService.create(toSave);
 
         assertNotNull(result);
-        assertEquals(sampleProduct.getId(), result.getId());
+        assertEquals(sampleProduct.getId(), result.id());
         verify(productRepository).save(toSave);
         verifyNoMoreInteractions(productRepository, productMapper);
     }
@@ -67,9 +68,9 @@ class ProductServiceTest {
     void get_shouldReturnProduct_whenFound() {
         when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
 
-        ProductEntity result = productService.get(1L);
+        ProductResponseDTO result = productService.get(1L);
 
-        assertEquals(1L, result.getId());
+        assertEquals(1L, result.id());
         verify(productRepository).findById(1L);
         verifyNoMoreInteractions(productRepository, productMapper);
     }
@@ -89,10 +90,10 @@ class ProductServiceTest {
         Page<ProductEntity> page = new PageImpl<>(List.of(sampleProduct), pageable, 1);
         when(productRepository.findAll(pageable)).thenReturn(page);
 
-        Page<ProductEntity> result = productService.list(pageable);
+        Page<ProductResponseDTO> result = productService.list(pageable);
 
         assertEquals(1, result.getTotalElements());
-        assertEquals(sampleProduct.getId(), result.getContent().get(0).getId());
+        assertEquals(sampleProduct.getId(), result.getContent().get(0).id());
         verify(productRepository).findAll(pageable);
         verifyNoMoreInteractions(productRepository, productMapper);
     }
@@ -120,11 +121,11 @@ class ProductServiceTest {
 
         when(productRepository.save(existing)).thenReturn(existing);
 
-        ProductEntity result = productService.update(1L, dto);
+        ProductResponseDTO result = productService.update(1L, dto);
 
-        assertEquals("Updated", result.getName());
-        assertEquals(200.0, result.getPrice());
-        assertFalse(result.getEnabled());
+        assertEquals("Updated", result.name());
+        assertEquals(200.0, result.price());
+        assertFalse(result.enabled());
 
         verify(productRepository).findById(1L);
         verify(productMapper).updateEntityFromUpdateDto(dto, existing);
